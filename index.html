@@ -16,7 +16,6 @@
 <!-- React + ReactDOM + Babel CDN -->
 <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-<script src="https://unpkg.com/@babel/standalone@7.23.10/babel.min.js"></script>
 <!-- Lucide Icons CDN -->
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
@@ -125,11 +124,21 @@ tr:nth-child(even) td { background: var(--appBg); }
 .badge-warning { background: #FEF3C7; color: #92400E; border-radius: 6px; padding: 2px 8px; font-size: 12px; font-weight: 600; }
 </style>
 
-<script type="text/babel" data-presets="react" data-type="module">
-const { useState, useEffect, useCallback, useRef } = React;
+<script>
+const {
+  useState,
+  useEffect,
+  useCallback,
+  useRef
+} = React;
 
 // ─── Lucide Icon Helper ───────────────────────────────────────────────────────
-function Icon({ name, size = 18, color = 'currentColor', strokeWidth = 2 }) {
+function Icon({
+  name,
+  size = 18,
+  color = 'currentColor',
+  strokeWidth = 2
+}) {
   const ref = useRef(null);
   useEffect(() => {
     if (ref.current && window.lucide) {
@@ -166,41 +175,90 @@ function Icon({ name, size = 18, color = 'currentColor', strokeWidth = 2 }) {
     check: `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>`,
     'file-down': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg>`,
     'file-up': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 12v6"/><path d="m15 15-3-3-3 3"/></svg>`,
-    'table-2': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>`,
+    'table-2': `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 24 24" fill="none" stroke="${color}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>`
   };
-  return <span dangerouslySetInnerHTML={{ __html: icons[name] || icons['x'] || '' }} style={{ display: 'inline-flex', alignItems: 'center' }} />;
+  return /*#__PURE__*/React.createElement("span", {
+    dangerouslySetInnerHTML: {
+      __html: icons[name] || icons['x'] || ''
+    },
+    style: {
+      display: 'inline-flex',
+      alignItems: 'center'
+    }
+  });
 }
 
 // ─── Unit Conversion ──────────────────────────────────────────────────────────
 const UNIT_MAP = {
-  Kg: { base: 'Kg', factor: 1 },
-  g: { base: 'Kg', factor: 0.001 },
-  'ပိဿာ': { base: 'ပိဿာ', factor: 1 },
-  'ကျပ်သား': { base: 'ပိဿာ', factor: 0.01 },
-  Liter: { base: 'Liter', factor: 1 },
-  ml: { base: 'Liter', factor: 0.001 },
-  PCS: { base: 'PCS', factor: 1 },
+  Kg: {
+    base: 'Kg',
+    factor: 1
+  },
+  g: {
+    base: 'Kg',
+    factor: 0.001
+  },
+  'ပိဿာ': {
+    base: 'ပိဿာ',
+    factor: 1
+  },
+  'ကျပ်သား': {
+    base: 'ပိဿာ',
+    factor: 0.01
+  },
+  Liter: {
+    base: 'Liter',
+    factor: 1
+  },
+  ml: {
+    base: 'Liter',
+    factor: 0.001
+  },
+  PCS: {
+    base: 'PCS',
+    factor: 1
+  }
 };
 const CROSS = {
-  Kg: { 'ပိဿာ': 1 / 1.6329 },
-  g: { 'ပိဿာ': 0.001 / 1.6329, 'ကျပ်သား': 0.001 / (1.6329 * 0.01) },
-  'ပိဿာ': { Kg: 1.6329, g: 1632.9 },
-  'ကျပ်သား': { Kg: 0.016329, g: 16.329 },
+  Kg: {
+    'ပိဿာ': 1 / 1.6329
+  },
+  g: {
+    'ပိဿာ': 0.001 / 1.6329,
+    'ကျပ်သား': 0.001 / (1.6329 * 0.01)
+  },
+  'ပိဿာ': {
+    Kg: 1.6329,
+    g: 1632.9
+  },
+  'ကျပ်သား': {
+    Kg: 0.016329,
+    g: 16.329
+  }
 };
 const UNITS = ['Kg', 'g', 'ပိဿာ', 'ကျပ်သား', 'Liter', 'ml', 'PCS'];
-const THEMES = [
-  { id: 'warm-bakery', name: '🍞 Warm Bakery' },
-  { id: 'midnight-dark', name: '🌙 Midnight Dark' },
-  { id: 'mint-matcha', name: '🍵 Mint Matcha' },
-  { id: 'royal-velvet', name: '💜 Royal Velvet' },
-  { id: 'minimal-slate', name: '⬜ Minimal Slate' },
-];
-
+const THEMES = [{
+  id: 'warm-bakery',
+  name: '🍞 Warm Bakery'
+}, {
+  id: 'midnight-dark',
+  name: '🌙 Midnight Dark'
+}, {
+  id: 'mint-matcha',
+  name: '🍵 Mint Matcha'
+}, {
+  id: 'royal-velvet',
+  name: '💜 Royal Velvet'
+}, {
+  id: 'minimal-slate',
+  name: '⬜ Minimal Slate'
+}];
 function convertUnit(qty, from, to) {
   if (from === to) return qty;
-  const f = UNIT_MAP[from], t = UNIT_MAP[to];
+  const f = UNIT_MAP[from],
+    t = UNIT_MAP[to];
   if (!f || !t) return null;
-  if (f.base === t.base) return (qty * f.factor) / t.factor;
+  if (f.base === t.base) return qty * f.factor / t.factor;
   const cf = CROSS[from]?.[to];
   if (cf !== undefined) return qty * cf;
   return null;
@@ -222,11 +280,14 @@ function getDerivedPrices(ing) {
 function getCompatibleUnits(unit) {
   const info = UNIT_MAP[unit];
   if (!info) return [unit];
-  const same = Object.entries(UNIT_MAP).filter(([,u]) => u.base === info.base).map(([u]) => u);
+  const same = Object.entries(UNIT_MAP).filter(([, u]) => u.base === info.base).map(([u]) => u);
   const cross = new Set();
   same.forEach(u => Object.keys(CROSS[u] || {}).forEach(t => cross.add(t)));
   const trans = new Set();
-  cross.forEach(t => { const ti = UNIT_MAP[t]; if (ti) Object.entries(UNIT_MAP).filter(([,u]) => u.base === ti.base).forEach(([u]) => trans.add(u)); });
+  cross.forEach(t => {
+    const ti = UNIT_MAP[t];
+    if (ti) Object.entries(UNIT_MAP).filter(([, u]) => u.base === ti.base).forEach(([u]) => trans.add(u));
+  });
   const all = new Set([...same, ...cross, ...trans]);
   return UNITS.filter(u => all.has(u));
 }
@@ -241,42 +302,57 @@ function calcIngCost(row, ingredients) {
 }
 function resolveOptional(cost, ingTotal) {
   if (!cost || !cost.enabled) return 0;
-  if (cost.isPercent) return (ingTotal * cost.amount) / 100;
+  if (cost.isPercent) return ingTotal * cost.amount / 100;
   return cost.amount || 0;
 }
 function calcTotal(product, ingredients) {
   const ing = product.ingredientRows.reduce((s, r) => s + calcIngCost(r, ingredients), 0);
-  return ing
-    + resolveOptional(product.packaging, ing)
-    + resolveOptional(product.labor, ing)
-    + resolveOptional(product.overhead, ing)
-    + resolveOptional(product.transport, ing)
-    + resolveOptional(product.wastage, ing);
+  return ing + resolveOptional(product.packaging, ing) + resolveOptional(product.labor, ing) + resolveOptional(product.overhead, ing) + resolveOptional(product.transport, ing) + resolveOptional(product.wastage, ing);
 }
-function formatKs(n) { return Math.round(n * 100) / 100 === 0 ? '0 Ks' : (Math.round(n * 100) / 100).toLocaleString('en-US') + ' Ks'; }
+function formatKs(n) {
+  return Math.round(n * 100) / 100 === 0 ? '0 Ks' : (Math.round(n * 100) / 100).toLocaleString('en-US') + ' Ks';
+}
 function formatDate(ts) {
   if (!ts) return '';
   const d = new Date(ts);
-  return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;
+  return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
 }
-function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
-function toNum(s) { return parseFloat(String(s).replace(/[၀-၉]/g, c => String('၀၁၂၃၄၅၆၇၈၉'.indexOf(c)))); }
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2);
+}
+function toNum(s) {
+  return parseFloat(String(s).replace(/[၀-၉]/g, c => String('၀၁၂၃၄၅၆၇၈၉'.indexOf(c))));
+}
 
 // ─── Storage ──────────────────────────────────────────────────────────────────
 const STORE_KEY = 'prod_calc_v2';
 function loadData() {
-  try { return JSON.parse(localStorage.getItem(STORE_KEY) || '{}'); } catch { return {}; }
+  try {
+    return JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+  } catch {
+    return {};
+  }
 }
-function saveData(data) { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
+function saveData(data) {
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+}
 
 // ─── Default OptionalCost ─────────────────────────────────────────────────────
-const defCost = () => ({ enabled: false, amount: 0, isPercent: false });
+const defCost = () => ({
+  enabled: false,
+  amount: 0,
+  isPercent: false
+});
 
 // ─── Main App ─────────────────────────────────────────────────────────────────
 function App() {
   const [tab, setTab] = useState('products');
   const [theme, setTheme] = useState(() => loadData().theme || 'warm-bakery');
-  const [profiles, setProfiles] = useState(() => loadData().profiles || [{ id: 'default', name: 'Production', createdAt: Date.now() }]);
+  const [profiles, setProfiles] = useState(() => loadData().profiles || [{
+    id: 'default',
+    name: 'Production',
+    createdAt: Date.now()
+  }]);
   const [activeProfileId, setActiveProfileId] = useState(() => loadData().activeProfileId || 'default');
   const [ingredients, setIngredients] = useState(() => loadData().ingredients || []);
   const [products, setProducts] = useState(() => loadData().products || []);
@@ -284,245 +360,657 @@ function App() {
   // Persist
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    saveData({ theme, profiles, activeProfileId, ingredients, products });
+    saveData({
+      theme,
+      profiles,
+      activeProfileId,
+      ingredients,
+      products
+    });
   }, [theme, profiles, activeProfileId, ingredients, products]);
-
   const activeProfile = profiles.find(p => p.id === activeProfileId) || profiles[0];
-
-  return (
-    <div style={{ minHeight: '100vh', background: 'var(--appBg)' }}>
-      {/* Header */}
-      <div className="header">
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          <span style={{ fontWeight: 700, fontSize: 16, color: 'var(--textMain)' }}>Production Calculate</span>
-          <span style={{ fontSize: 12, color: 'var(--textMuted)' }}>{activeProfile?.name}</span>
-        </div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-          <ProfileSwitcher profiles={profiles} activeProfileId={activeProfileId} setActiveProfileId={setActiveProfileId} setProfiles={setProfiles} />
-          <ThemeSwitcher theme={theme} setTheme={setTheme} />
-        </div>
-      </div>
-
-      {/* Tab Content */}
-      <div>
-        {tab === 'products' && <ProductsTab ingredients={ingredients} products={products} setProducts={setProducts} />}
-        {tab === 'ingredients' && <IngredientsTab ingredients={ingredients} setIngredients={setIngredients} />}
-        {tab === 'settings' && <SettingsTab ingredients={ingredients} products={products} setIngredients={setIngredients} setProducts={setProducts} profiles={profiles} setProfiles={setProfiles} activeProfileId={activeProfileId} setActiveProfileId={setActiveProfileId} theme={theme} setTheme={setTheme} />}
-      </div>
-
-      {/* Tab Bar */}
-      <div className="tab-bar">
-        {[
-          { id: 'products', label: 'ထုတ်ကုန်', icon: 'home' },
-          { id: 'ingredients', label: 'ကုန်ကြမ်း', icon: 'shopping-basket' },
-          { id: 'settings', label: 'ဆက်တင်', icon: 'settings' },
-        ].map(t => (
-          <button key={t.id} className={`tab-item ${tab === t.id ? 'active' : ''}`} onClick={() => setTab(t.id)}>
-            <Icon name={t.icon} size={22} color={tab === t.id ? 'var(--brand)' : 'var(--textMuted)'} />
-            <span>{t.label}</span>
-          </button>
-        ))}
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      minHeight: '100vh',
+      background: 'var(--appBg)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "header"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column'
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 16,
+      color: 'var(--textMain)'
+    }
+  }, "Production Calculate"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, activeProfile?.name)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement(ProfileSwitcher, {
+    profiles: profiles,
+    activeProfileId: activeProfileId,
+    setActiveProfileId: setActiveProfileId,
+    setProfiles: setProfiles
+  }), /*#__PURE__*/React.createElement(ThemeSwitcher, {
+    theme: theme,
+    setTheme: setTheme
+  }))), /*#__PURE__*/React.createElement("div", null, tab === 'products' && /*#__PURE__*/React.createElement(ProductsTab, {
+    ingredients: ingredients,
+    products: products,
+    setProducts: setProducts
+  }), tab === 'ingredients' && /*#__PURE__*/React.createElement(IngredientsTab, {
+    ingredients: ingredients,
+    setIngredients: setIngredients
+  }), tab === 'settings' && /*#__PURE__*/React.createElement(SettingsTab, {
+    ingredients: ingredients,
+    products: products,
+    setIngredients: setIngredients,
+    setProducts: setProducts,
+    profiles: profiles,
+    setProfiles: setProfiles,
+    activeProfileId: activeProfileId,
+    setActiveProfileId: setActiveProfileId,
+    theme: theme,
+    setTheme: setTheme
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "tab-bar"
+  }, [{
+    id: 'products',
+    label: 'ထုတ်ကုန်',
+    icon: 'home'
+  }, {
+    id: 'ingredients',
+    label: 'ကုန်ကြမ်း',
+    icon: 'shopping-basket'
+  }, {
+    id: 'settings',
+    label: 'ဆက်တင်',
+    icon: 'settings'
+  }].map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    className: `tab-item ${tab === t.id ? 'active' : ''}`,
+    onClick: () => setTab(t.id)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: t.icon,
+    size: 22,
+    color: tab === t.id ? 'var(--brand)' : 'var(--textMuted)'
+  }), /*#__PURE__*/React.createElement("span", null, t.label)))));
 }
 
 // ─── Profile Switcher ─────────────────────────────────────────────────────────
-function ProfileSwitcher({ profiles, activeProfileId, setActiveProfileId, setProfiles }) {
+function ProfileSwitcher({
+  profiles,
+  activeProfileId,
+  setActiveProfileId,
+  setProfiles
+}) {
   const [open, setOpen] = useState(false);
   const [addMode, setAddMode] = useState(false);
   const [newName, setNewName] = useState('');
   const active = profiles.find(p => p.id === activeProfileId);
-
-  return (
-    <div style={{ position: 'relative' }}>
-      <button className="profile-badge" onClick={() => setOpen(!open)}>
-        <Icon name="building" size={14} color="var(--brand)" />
-        <span style={{ maxWidth: 100, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{active?.name}</span>
-        <Icon name="chevron-down" size={12} color="var(--brand)" />
-      </button>
-      {open && (
-        <div style={{ position: 'absolute', right: 0, top: '110%', background: 'var(--cardBg)', border: '1px solid var(--borderCol)', borderRadius: 12, minWidth: 200, zIndex: 200, boxShadow: '0 8px 24px rgba(0,0,0,.15)', padding: 8 }}>
-          {profiles.map(p => (
-            <div key={p.id} style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '8px 10px', borderRadius: 8, cursor: 'pointer', background: p.id === activeProfileId ? 'var(--brandLight)' : 'transparent' }}
-              onClick={() => { setActiveProfileId(p.id); setOpen(false); }}>
-              {p.id === activeProfileId && <Icon name="check" size={14} color="var(--brand)" />}
-              <span style={{ flex: 1, fontSize: 14, color: 'var(--textMain)' }}>{p.name}</span>
-              {profiles.length > 1 && (
-                <button style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 2 }} onClick={e => { e.stopPropagation(); setProfiles(prev => prev.filter(x => x.id !== p.id)); if (activeProfileId === p.id) setActiveProfileId(profiles[0].id); }}>
-                  <Icon name="x" size={13} color="var(--danger)" />
-                </button>
-              )}
-            </div>
-          ))}
-          <hr style={{ border: 'none', borderTop: '1px solid var(--borderCol)', margin: '6px 0' }} />
-          {addMode ? (
-            <div style={{ padding: '4px 6px', display: 'flex', gap: 6 }}>
-              <input className="input" style={{ fontSize: 13, padding: '6px 10px' }} placeholder="Profile အမည်" value={newName} onChange={e => setNewName(e.target.value)} autoFocus onKeyDown={e => { if (e.key === 'Enter' && newName.trim()) { setProfiles(prev => [...prev, { id: uid(), name: newName.trim(), createdAt: Date.now() }]); setNewName(''); setAddMode(false); }}} />
-              <button className="btn btn-primary" style={{ padding: '6px 12px', fontSize: 13 }} onClick={() => { if (newName.trim()) { setProfiles(prev => [...prev, { id: uid(), name: newName.trim(), createdAt: Date.now() }]); setNewName(''); setAddMode(false); }}}>+</button>
-            </div>
-          ) : (
-            <button style={{ width: '100%', padding: '8px 10px', border: 'none', background: 'none', cursor: 'pointer', color: 'var(--brand)', fontSize: 13, fontWeight: 600, textAlign: 'left', borderRadius: 8 }} onClick={() => setAddMode(true)}>+ Profile အသစ်ထည့်ရန်</button>
-          )}
-        </div>
-      )}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "profile-badge",
+    onClick: () => setOpen(!open)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "building",
+    size: 14,
+    color: "var(--brand)"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      maxWidth: 100,
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+      whiteSpace: 'nowrap'
+    }
+  }, active?.name), /*#__PURE__*/React.createElement(Icon, {
+    name: "chevron-down",
+    size: 12,
+    color: "var(--brand)"
+  })), open && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      right: 0,
+      top: '110%',
+      background: 'var(--cardBg)',
+      border: '1px solid var(--borderCol)',
+      borderRadius: 12,
+      minWidth: 200,
+      zIndex: 200,
+      boxShadow: '0 8px 24px rgba(0,0,0,.15)',
+      padding: 8
+    }
+  }, profiles.map(p => /*#__PURE__*/React.createElement("div", {
+    key: p.id,
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8,
+      padding: '8px 10px',
+      borderRadius: 8,
+      cursor: 'pointer',
+      background: p.id === activeProfileId ? 'var(--brandLight)' : 'transparent'
+    },
+    onClick: () => {
+      setActiveProfileId(p.id);
+      setOpen(false);
+    }
+  }, p.id === activeProfileId && /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 14,
+    color: "var(--brand)"
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      flex: 1,
+      fontSize: 14,
+      color: 'var(--textMain)'
+    }
+  }, p.name), profiles.length > 1 && /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer',
+      padding: 2
+    },
+    onClick: e => {
+      e.stopPropagation();
+      setProfiles(prev => prev.filter(x => x.id !== p.id));
+      if (activeProfileId === p.id) setActiveProfileId(profiles[0].id);
+    }
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 13,
+    color: "var(--danger)"
+  })))), /*#__PURE__*/React.createElement("hr", {
+    style: {
+      border: 'none',
+      borderTop: '1px solid var(--borderCol)',
+      margin: '6px 0'
+    }
+  }), addMode ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: '4px 6px',
+      display: 'flex',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    style: {
+      fontSize: 13,
+      padding: '6px 10px'
+    },
+    placeholder: "Profile အမည်",
+    value: newName,
+    onChange: e => setNewName(e.target.value),
+    autoFocus: true,
+    onKeyDown: e => {
+      if (e.key === 'Enter' && newName.trim()) {
+        setProfiles(prev => [...prev, {
+          id: uid(),
+          name: newName.trim(),
+          createdAt: Date.now()
+        }]);
+        setNewName('');
+        setAddMode(false);
+      }
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      padding: '6px 12px',
+      fontSize: 13
+    },
+    onClick: () => {
+      if (newName.trim()) {
+        setProfiles(prev => [...prev, {
+          id: uid(),
+          name: newName.trim(),
+          createdAt: Date.now()
+        }]);
+        setNewName('');
+        setAddMode(false);
+      }
+    }
+  }, "+")) : /*#__PURE__*/React.createElement("button", {
+    style: {
+      width: '100%',
+      padding: '8px 10px',
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer',
+      color: 'var(--brand)',
+      fontSize: 13,
+      fontWeight: 600,
+      textAlign: 'left',
+      borderRadius: 8
+    },
+    onClick: () => setAddMode(true)
+  }, "+ Profile အသစ်ထည့်ရန်")));
 }
 
 // ─── Theme Switcher ───────────────────────────────────────────────────────────
-function ThemeSwitcher({ theme, setTheme }) {
+function ThemeSwitcher({
+  theme,
+  setTheme
+}) {
   const [open, setOpen] = useState(false);
-  return (
-    <div style={{ position: 'relative' }}>
-      <button style={{ border: 'none', background: 'var(--brandLight)', borderRadius: 8, padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={() => setOpen(!open)}>
-        <Icon name="palette" size={18} color="var(--brand)" />
-      </button>
-      {open && (
-        <div style={{ position: 'absolute', right: 0, top: '110%', background: 'var(--cardBg)', border: '1px solid var(--borderCol)', borderRadius: 12, minWidth: 180, zIndex: 200, boxShadow: '0 8px 24px rgba(0,0,0,.15)', padding: 8 }}>
-          {THEMES.map(t => (
-            <button key={t.id} style={{ width: '100%', padding: '8px 12px', border: 'none', background: t.id === theme ? 'var(--brandLight)' : 'none', borderRadius: 8, cursor: 'pointer', color: 'var(--textMain)', fontSize: 13, fontWeight: t.id === theme ? 700 : 400, textAlign: 'left', display: 'flex', alignItems: 'center', gap: 8 }}
-              onClick={() => { setTheme(t.id); document.documentElement.setAttribute('data-theme', t.id); setOpen(false); }}>
-              {t.id === theme && <Icon name="check" size={13} color="var(--brand)" />}
-              {t.name}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'relative'
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'var(--brandLight)',
+      borderRadius: 8,
+      padding: '6px 8px',
+      cursor: 'pointer',
+      display: 'flex',
+      alignItems: 'center'
+    },
+    onClick: () => setOpen(!open)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "palette",
+    size: 18,
+    color: "var(--brand)"
+  })), open && /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'absolute',
+      right: 0,
+      top: '110%',
+      background: 'var(--cardBg)',
+      border: '1px solid var(--borderCol)',
+      borderRadius: 12,
+      minWidth: 180,
+      zIndex: 200,
+      boxShadow: '0 8px 24px rgba(0,0,0,.15)',
+      padding: 8
+    }
+  }, THEMES.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    style: {
+      width: '100%',
+      padding: '8px 12px',
+      border: 'none',
+      background: t.id === theme ? 'var(--brandLight)' : 'none',
+      borderRadius: 8,
+      cursor: 'pointer',
+      color: 'var(--textMain)',
+      fontSize: 13,
+      fontWeight: t.id === theme ? 700 : 400,
+      textAlign: 'left',
+      display: 'flex',
+      alignItems: 'center',
+      gap: 8
+    },
+    onClick: () => {
+      setTheme(t.id);
+      document.documentElement.setAttribute('data-theme', t.id);
+      setOpen(false);
+    }
+  }, t.id === theme && /*#__PURE__*/React.createElement(Icon, {
+    name: "check",
+    size: 13,
+    color: "var(--brand)"
+  }), t.name))));
 }
 
 // ─── Products Tab ─────────────────────────────────────────────────────────────
-function ProductsTab({ ingredients, products, setProducts }) {
+function ProductsTab({
+  ingredients,
+  products,
+  setProducts
+}) {
   const [showCalc, setShowCalc] = useState(false);
   const [editProduct, setEditProduct] = useState(null);
   const [viewDetail, setViewDetail] = useState(null);
-
-  const handleDelete = (id) => {
+  const handleDelete = id => {
     if (confirm('ဒီ product ကို ဖျက်မည်လား?')) setProducts(prev => prev.filter(p => p.id !== id));
   };
-
   if (showCalc || editProduct) {
-    return <ProductCalculator ingredients={ingredients} editProduct={editProduct} onSave={p => { setProducts(prev => editProduct ? prev.map(x => x.id === p.id ? p : x) : [...prev, p]); setShowCalc(false); setEditProduct(null); }} onCancel={() => { setShowCalc(false); setEditProduct(null); }} />;
+    return /*#__PURE__*/React.createElement(ProductCalculator, {
+      ingredients: ingredients,
+      editProduct: editProduct,
+      onSave: p => {
+        setProducts(prev => editProduct ? prev.map(x => x.id === p.id ? p : x) : [...prev, p]);
+        setShowCalc(false);
+        setEditProduct(null);
+      },
+      onCancel: () => {
+        setShowCalc(false);
+        setEditProduct(null);
+      }
+    });
   }
   if (viewDetail) {
-    return <ProductDetail product={viewDetail} ingredients={ingredients} onBack={() => setViewDetail(null)} onEdit={p => { setEditProduct(p); setViewDetail(null); }} onDelete={id => { handleDelete(id); setViewDetail(null); }} />;
+    return /*#__PURE__*/React.createElement(ProductDetail, {
+      product: viewDetail,
+      ingredients: ingredients,
+      onBack: () => setViewDetail(null),
+      onEdit: p => {
+        setEditProduct(p);
+        setViewDetail(null);
+      },
+      onDelete: id => {
+        handleDelete(id);
+        setViewDetail(null);
+      }
+    });
   }
-
-  return (
-    <div className="page-content">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
-        <h2 className="section-title" style={{ margin: 0 }}>ထုတ်ကုန်များ</h2>
-        <span style={{ fontSize: 12, color: 'var(--textMuted)' }}>{products.length} ခု</span>
-      </div>
-      {products.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">🥐</div>
-          <div className="empty-title">ထုတ်ကုန် မရှိသေးပါ</div>
-          <div className="empty-desc">+ ခလုတ်နှိပ်ပြီး ထုတ်ကုန်အသစ် ထည့်ပါ</div>
-        </div>
-      ) : (
-        products.map(p => {
-          const total = calcTotal(p, ingredients);
-          const unitP = p.productQty && p.productQty > 0 ? total / p.productQty : null;
-          return (
-            <div key={p.id} className="card" style={{ cursor: 'pointer' }} onClick={() => setViewDetail(p)}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontWeight: 700, fontSize: 16, color: 'var(--textMain)', marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 13, color: 'var(--textMuted)', marginBottom: 6 }}>{formatDate(p.createdAt)}</div>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    <span className="chip">စုစုပေါင်း: {formatKs(total)}</span>
-                    {unitP !== null && <span className="chip">တစ်ခု: {formatKs(unitP)}</span>}
-                    {p.productQty > 0 && <span className="chip">{p.productQty} ခု</span>}
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: 6, marginLeft: 8 }}>
-                  <button className="btn btn-ghost" style={{ padding: '6px 10px' }} onClick={e => { e.stopPropagation(); setEditProduct(p); }}>
-                    <Icon name="pencil" size={15} color="var(--brand)" />
-                  </button>
-                  <button className="btn btn-danger" style={{ padding: '6px 10px' }} onClick={e => { e.stopPropagation(); handleDelete(p.id); }}>
-                    <Icon name="trash" size={15} color="var(--danger)" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          );
-        })
-      )}
-      <div className="footer">Creator — Lwin Oo</div>
-      <button className="fab" onClick={() => setShowCalc(true)}>
-        <Icon name="plus" size={26} color="#fff" />
-      </button>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title",
+    style: {
+      margin: 0
+    }
+  }, "ထုတ်ကုန်များ"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, products.length, " ခု")), products.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, "🥐"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, "ထုတ်ကုန် မရှိသေးပါ"), /*#__PURE__*/React.createElement("div", {
+    className: "empty-desc"
+  }, "+ ခလုတ်နှိပ်ပြီး ထုတ်ကုန်အသစ် ထည့်ပါ")) : products.map(p => {
+    const total = calcTotal(p, ingredients);
+    const unitP = p.productQty && p.productQty > 0 ? total / p.productQty : null;
+    return /*#__PURE__*/React.createElement("div", {
+      key: p.id,
+      className: "card",
+      style: {
+        cursor: 'pointer'
+      },
+      onClick: () => setViewDetail(p)
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        fontSize: 16,
+        color: 'var(--textMain)',
+        marginBottom: 4
+      }
+    }, p.name), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 13,
+        color: 'var(--textMuted)',
+        marginBottom: 6
+      }
+    }, formatDate(p.createdAt)), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 8,
+        flexWrap: 'wrap'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "chip"
+    }, "စုစုပေါင်း: ", formatKs(total)), unitP !== null && /*#__PURE__*/React.createElement("span", {
+      className: "chip"
+    }, "တစ်ခု: ", formatKs(unitP)), p.productQty > 0 && /*#__PURE__*/React.createElement("span", {
+      className: "chip"
+    }, p.productQty, " ခု"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 6,
+        marginLeft: 8
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-ghost",
+      style: {
+        padding: '6px 10px'
+      },
+      onClick: e => {
+        e.stopPropagation();
+        setEditProduct(p);
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "pencil",
+      size: 15,
+      color: "var(--brand)"
+    })), /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-danger",
+      style: {
+        padding: '6px 10px'
+      },
+      onClick: e => {
+        e.stopPropagation();
+        handleDelete(p.id);
+      }
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "trash",
+      size: 15,
+      color: "var(--danger)"
+    })))));
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "footer"
+  }, "Creator — Lwin Oo"), /*#__PURE__*/React.createElement("button", {
+    className: "fab",
+    onClick: () => setShowCalc(true)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 26,
+    color: "#fff"
+  })));
 }
 
 // ─── Product Detail ───────────────────────────────────────────────────────────
-function ProductDetail({ product, ingredients, onBack, onEdit, onDelete }) {
+function ProductDetail({
+  product,
+  ingredients,
+  onBack,
+  onEdit,
+  onDelete
+}) {
   const total = calcTotal(product, ingredients);
   const ingTotal = product.ingredientRows.reduce((s, r) => s + calcIngCost(r, ingredients), 0);
   const unitP = product.productQty && product.productQty > 0 ? total / product.productQty : null;
-
-  return (
-    <div className="page-content">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-        <button className="btn btn-ghost" style={{ padding: '6px 12px' }} onClick={onBack}>← နောက်သို့</button>
-        <h2 style={{ flex: 1, fontWeight: 700, fontSize: 18, color: 'var(--textMain)', margin: 0 }}>{product.name}</h2>
-        <button className="btn btn-ghost" style={{ padding: '6px 10px' }} onClick={() => onEdit(product)}><Icon name="pencil" size={15} color="var(--brand)" /></button>
-        <button className="btn btn-danger" style={{ padding: '6px 10px' }} onClick={() => onDelete(product.id)}><Icon name="trash" size={15} color="var(--danger)" /></button>
-      </div>
-
-      <div className="card">
-        <div className="section-title" style={{ fontSize: 15 }}>ကုန်ကြမ်းများ</div>
-        {product.ingredientRows.map((row, i) => {
-          const ing = ingredients.find(x => x.id === row.ingredientId);
-          const cost = calcIngCost(row, ingredients);
-          return (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--borderCol)', fontSize: 14 }}>
-              <span style={{ color: 'var(--textMain)' }}>{ing?.name || 'Unknown'} <span style={{ color: 'var(--textMuted)' }}>({row.quantity} {row.usedUnit || ing?.unit})</span></span>
-              <span style={{ fontWeight: 600, color: 'var(--brand)' }}>{formatKs(cost)}</span>
-            </div>
-          );
-        })}
-        <div style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', fontWeight: 700, fontSize: 14 }}>
-          <span>Ingredient စုစုပေါင်း</span><span style={{ color: 'var(--brand)' }}>{formatKs(ingTotal)}</span>
-        </div>
-      </div>
-
-      {[
-        { key: 'packaging', label: 'Packaging' },
-        { key: 'labor', label: 'Labor / လုပ်ခ' },
-        { key: 'overhead', label: 'Overhead' },
-        { key: 'transport', label: 'Transport' },
-        { key: 'wastage', label: 'Wastage / အပျက်စီး' },
-      ].map(({ key, label }) => {
-        const c = product[key];
-        if (!c || !c.enabled) return null;
-        const val = resolveOptional(c, ingTotal);
-        return (
-          <div key={key} className="card" style={{ padding: '10px 14px', marginBottom: 8 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-              <span style={{ color: 'var(--textMuted)' }}>{label} {c.isPercent ? `(${c.amount}%)` : ''}</span>
-              <span style={{ fontWeight: 600, color: 'var(--textMain)' }}>{formatKs(val)}</span>
-            </div>
-          </div>
-        );
-      })}
-
-      <div className="summary-box">
-        <div className="summary-row"><span style={{ fontWeight: 700 }}>စုစုပေါင်း ကုန်ကျ</span><span className="summary-total">{formatKs(total)}</span></div>
-        {product.productQty > 0 && <div className="summary-row" style={{ color: 'var(--textMuted)' }}><span>ထုတ်ကုန်အရေအတွက်</span><span>{product.productQty} ခု</span></div>}
-        {unitP !== null && <div className="summary-row"><span style={{ fontWeight: 700 }}>တစ်ခုချင်းတန်ဖိုး</span><span style={{ fontWeight: 700, color: 'var(--success)' }}>{formatKs(unitP)}</span></div>}
-      </div>
-      <div className="footer">Creator — Lwin Oo</div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '6px 12px'
+    },
+    onClick: onBack
+  }, "← နောက်သို့"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      flex: 1,
+      fontWeight: 700,
+      fontSize: 18,
+      color: 'var(--textMain)',
+      margin: 0
+    }
+  }, product.name), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '6px 10px'
+    },
+    onClick: () => onEdit(product)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "pencil",
+    size: 15,
+    color: "var(--brand)"
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-danger",
+    style: {
+      padding: '6px 10px'
+    },
+    onClick: () => onDelete(product.id)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trash",
+    size: 15,
+    color: "var(--danger)"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "section-title",
+    style: {
+      fontSize: 15
+    }
+  }, "ကုန်ကြမ်းများ"), product.ingredientRows.map((row, i) => {
+    const ing = ingredients.find(x => x.id === row.ingredientId);
+    const cost = calcIngCost(row, ingredients);
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '8px 0',
+        borderBottom: '1px solid var(--borderCol)',
+        fontSize: 14
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: 'var(--textMain)'
+      }
+    }, ing?.name || 'Unknown', " ", /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: 'var(--textMuted)'
+      }
+    }, "(", row.quantity, " ", row.usedUnit || ing?.unit, ")")), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 600,
+        color: 'var(--brand)'
+      }
+    }, formatKs(cost)));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      padding: '8px 0',
+      fontWeight: 700,
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "Ingredient စုစုပေါင်း"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--brand)'
+    }
+  }, formatKs(ingTotal)))), [{
+    key: 'packaging',
+    label: 'Packaging'
+  }, {
+    key: 'labor',
+    label: 'Labor / လုပ်ခ'
+  }, {
+    key: 'overhead',
+    label: 'Overhead'
+  }, {
+    key: 'transport',
+    label: 'Transport'
+  }, {
+    key: 'wastage',
+    label: 'Wastage / အပျက်စီး'
+  }].map(({
+    key,
+    label
+  }) => {
+    const c = product[key];
+    if (!c || !c.enabled) return null;
+    const val = resolveOptional(c, ingTotal);
+    return /*#__PURE__*/React.createElement("div", {
+      key: key,
+      className: "card",
+      style: {
+        padding: '10px 14px',
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        fontSize: 14
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: 'var(--textMuted)'
+      }
+    }, label, " ", c.isPercent ? `(${c.amount}%)` : ''), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 600,
+        color: 'var(--textMain)'
+      }
+    }, formatKs(val))));
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "summary-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "summary-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700
+    }
+  }, "စုစုပေါင်း ကုန်ကျ"), /*#__PURE__*/React.createElement("span", {
+    className: "summary-total"
+  }, formatKs(total))), product.productQty > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "summary-row",
+    style: {
+      color: 'var(--textMuted)'
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "ထုတ်ကုန်အရေအတွက်"), /*#__PURE__*/React.createElement("span", null, product.productQty, " ခု")), unitP !== null && /*#__PURE__*/React.createElement("div", {
+    className: "summary-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700
+    }
+  }, "တစ်ခုချင်းတန်ဖိုး"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      color: 'var(--success)'
+    }
+  }, formatKs(unitP)))), /*#__PURE__*/React.createElement("div", {
+    className: "footer"
+  }, "Creator — Lwin Oo"));
 }
 
 // ─── Product Calculator ───────────────────────────────────────────────────────
-function ProductCalculator({ ingredients, editProduct, onSave, onCancel }) {
+function ProductCalculator({
+  ingredients,
+  editProduct,
+  onSave,
+  onCancel
+}) {
   const [name, setName] = useState(editProduct?.name || '');
   const [rows, setRows] = useState(editProduct?.ingredientRows || []);
   const [packaging, setPackaging] = useState(editProduct?.packaging || defCost());
@@ -531,24 +1019,23 @@ function ProductCalculator({ ingredients, editProduct, onSave, onCancel }) {
   const [transport, setTransport] = useState(editProduct?.transport || defCost());
   const [wastage, setWastage] = useState(editProduct?.wastage || defCost());
   const [productQty, setProductQty] = useState(editProduct?.productQty ? String(editProduct.productQty) : '');
-
   const ingTotal = rows.reduce((s, r) => s + calcIngCost(r, ingredients), 0);
-  const total = ingTotal
-    + resolveOptional(packaging, ingTotal)
-    + resolveOptional(labor, ingTotal)
-    + resolveOptional(overhead, ingTotal)
-    + resolveOptional(transport, ingTotal)
-    + resolveOptional(wastage, ingTotal);
+  const total = ingTotal + resolveOptional(packaging, ingTotal) + resolveOptional(labor, ingTotal) + resolveOptional(overhead, ingTotal) + resolveOptional(transport, ingTotal) + resolveOptional(wastage, ingTotal);
   const qty = toNum(productQty);
   const unitPrice = !isNaN(qty) && qty > 0 ? total / qty : null;
-
   const addRow = () => {
     if (ingredients.length === 0) return alert('ကုန်ကြမ်း မရှိသေးပါ');
-    setRows(prev => [...prev, { ingredientId: ingredients[0].id, quantity: 1, usedUnit: ingredients[0].unit }]);
+    setRows(prev => [...prev, {
+      ingredientId: ingredients[0].id,
+      quantity: 1,
+      usedUnit: ingredients[0].unit
+    }]);
   };
-  const updateRow = (i, field, val) => setRows(prev => prev.map((r, idx) => idx === i ? { ...r, [field]: val } : r));
-  const removeRow = (i) => setRows(prev => prev.filter((_, idx) => idx !== i));
-
+  const updateRow = (i, field, val) => setRows(prev => prev.map((r, idx) => idx === i ? {
+    ...r,
+    [field]: val
+  } : r));
+  const removeRow = i => setRows(prev => prev.filter((_, idx) => idx !== i));
   const handleSave = () => {
     if (!name.trim()) return alert('ထုတ်ကုန်အမည် ထည့်ပေးပါ');
     const qtyNum = toNum(productQty);
@@ -556,335 +1043,884 @@ function ProductCalculator({ ingredients, editProduct, onSave, onCancel }) {
       id: editProduct?.id || uid(),
       name: name.trim(),
       ingredientRows: rows,
-      packaging, labor, overhead, transport, wastage,
+      packaging,
+      labor,
+      overhead,
+      transport,
+      wastage,
       productQty: !isNaN(qtyNum) && qtyNum > 0 ? qtyNum : 0,
-      createdAt: editProduct?.createdAt || Date.now(),
+      createdAt: editProduct?.createdAt || Date.now()
     });
   };
-
-  return (
-    <div className="page-content">
-      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-        <button className="btn btn-ghost" style={{ padding: '6px 12px' }} onClick={onCancel}>← နောက်သို့</button>
-        <h2 style={{ flex: 1, fontWeight: 700, fontSize: 18, color: 'var(--textMain)', margin: 0 }}>{editProduct ? 'ပြင်ဆင်ရန်' : 'ထုတ်ကုန်အသစ်'}</h2>
-      </div>
-
-      <div className="card">
-        <label className="label">ထုတ်ကုန်အမည်</label>
-        <input className="input" placeholder="ဥပမာ — Chocolate Cake" value={name} onChange={e => setName(e.target.value)} />
-      </div>
-
-      <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
-          <span className="section-title" style={{ margin: 0, fontSize: 15 }}>ကုန်ကြမ်းများ</span>
-          <button className="btn btn-ghost" style={{ padding: '5px 12px', fontSize: 13 }} onClick={addRow}>+ ထည့်ရန်</button>
-        </div>
-        {rows.length === 0 && <div style={{ color: 'var(--textMuted)', fontSize: 13, textAlign: 'center', padding: '12px 0' }}>ကုန်ကြမ်း မရှိသေးပါ</div>}
-        {rows.map((row, i) => {
-          const ing = ingredients.find(x => x.id === row.ingredientId);
-          const compatible = ing ? getCompatibleUnits(ing.unit) : [];
-          const cost = calcIngCost(row, ingredients);
-          return (
-            <div key={i} className="ing-row-card">
-              <div style={{ display: 'flex', gap: 8, marginBottom: 8, alignItems: 'center' }}>
-                <select className="select" style={{ flex: 2 }} value={row.ingredientId} onChange={e => { const newIng = ingredients.find(x => x.id === e.target.value); updateRow(i, 'ingredientId', e.target.value); if (newIng) updateRow(i, 'usedUnit', newIng.unit); }}>
-                  {ingredients.map(ing => <option key={ing.id} value={ing.id}>{ing.name}</option>)}
-                </select>
-                <button style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 4 }} onClick={() => removeRow(i)}>
-                  <Icon name="x" size={16} color="var(--danger)" />
-                </button>
-              </div>
-              <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                <input className="input" style={{ flex: 1 }} type="number" placeholder="ပမာဏ" value={row.quantity} onChange={e => updateRow(i, 'quantity', parseFloat(e.target.value) || 0)} />
-                <select className="select" style={{ flex: 1 }} value={row.usedUnit || ing?.unit || ''} onChange={e => updateRow(i, 'usedUnit', e.target.value)}>
-                  {compatible.map(u => <option key={u} value={u}>{u}</option>)}
-                </select>
-                <span style={{ minWidth: 80, textAlign: 'right', fontSize: 13, fontWeight: 600, color: 'var(--brand)' }}>{formatKs(cost)}</span>
-              </div>
-            </div>
-          );
-        })}
-        <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 8, fontWeight: 700, fontSize: 14, color: 'var(--brand)' }}>
-          Ingredient စုစုပေါင်း: {formatKs(ingTotal)}
-        </div>
-      </div>
-
-      {/* Optional Costs */}
-      {[
-        { key: 'packaging', label: 'Packaging', state: packaging, set: setPackaging },
-        { key: 'labor', label: 'Labor / လုပ်ခ', state: labor, set: setLabor },
-        { key: 'overhead', label: 'Overhead', state: overhead, set: setOverhead },
-        { key: 'transport', label: 'Transport', state: transport, set: setTransport },
-        { key: 'wastage', label: 'Wastage / အပျက်စီး', state: wastage, set: setWastage },
-      ].map(({ key, label, state, set }) => (
-        <div key={key} className="card" style={{ padding: '10px 14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <input type="checkbox" checked={state.enabled} onChange={e => set(prev => ({ ...prev, enabled: e.target.checked }))} style={{ width: 16, height: 16, accentColor: 'var(--brand)', cursor: 'pointer' }} />
-            <span style={{ flex: 1, fontWeight: 600, fontSize: 14, color: 'var(--textMain)' }}>{label}</span>
-            {state.enabled && (
-              <div className="toggle-group" style={{ padding: 2 }}>
-                <button className={`toggle-btn ${!state.isPercent ? 'active' : ''}`} style={{ padding: '3px 8px', fontSize: 12 }} onClick={() => set(prev => ({ ...prev, isPercent: false }))}>Ks</button>
-                <button className={`toggle-btn ${state.isPercent ? 'active' : ''}`} style={{ padding: '3px 8px', fontSize: 12 }} onClick={() => set(prev => ({ ...prev, isPercent: true }))}>%</button>
-              </div>
-            )}
-          </div>
-          {state.enabled && (
-            <div style={{ marginTop: 8, display: 'flex', gap: 8, alignItems: 'center' }}>
-              <input className="input" type="number" placeholder={state.isPercent ? "ရာခိုင်နှုန်း %" : "ပမာဏ (Ks)"} value={state.amount || ''} onChange={e => set(prev => ({ ...prev, amount: parseFloat(e.target.value) || 0 }))} />
-              <span style={{ fontSize: 13, color: 'var(--brand)', fontWeight: 600, minWidth: 70, textAlign: 'right' }}>{formatKs(resolveOptional(state, ingTotal))}</span>
-            </div>
-          )}
-        </div>
-      ))}
-
-      {/* Product Qty */}
-      <div className="card">
-        <label className="label">ထုတ်ကုန်အရေအတွက် (ခု)</label>
-        <input className="input" type="number" placeholder="ဥပမာ — 10" value={productQty} onChange={e => setProductQty(e.target.value)} />
-        {unitPrice !== null && (
-          <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-            <span style={{ color: 'var(--textMuted)' }}>တစ်ခုချင်းတန်ဖိုး</span>
-            <span style={{ fontWeight: 700, color: 'var(--success)' }}>{formatKs(unitPrice)}</span>
-          </div>
-        )}
-      </div>
-
-      {/* Summary */}
-      <div className="summary-box">
-        <div className="summary-row"><span style={{ fontWeight: 700, fontSize: 16 }}>စုစုပေါင်း ကုန်ကျ</span><span className="summary-total" style={{ fontSize: 20 }}>{formatKs(total)}</span></div>
-        {unitPrice !== null && <div className="summary-row"><span style={{ fontWeight: 600 }}>တစ်ခုချင်းတန်ဖိုး</span><span style={{ fontWeight: 700, color: 'var(--success)' }}>{formatKs(unitPrice)}</span></div>}
-      </div>
-
-      <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
-        <button className="btn" style={{ flex: 1, background: 'var(--borderCol)', color: 'var(--textMuted)', justifyContent: 'center' }} onClick={onCancel}>မသိမ်းဘဲ ပြန်ထွက်</button>
-        <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center' }} onClick={handleSave}>{editProduct ? '✓ ပြင်ဆင်မည်' : '✓ သိမ်းဆည်းမည်'}</button>
-      </div>
-      <div className="footer">Creator — Lwin Oo</div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10,
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '6px 12px'
+    },
+    onClick: onCancel
+  }, "← နောက်သို့"), /*#__PURE__*/React.createElement("h2", {
+    style: {
+      flex: 1,
+      fontWeight: 700,
+      fontSize: 18,
+      color: 'var(--textMain)',
+      margin: 0
+    }
+  }, editProduct ? 'ပြင်ဆင်ရန်' : 'ထုတ်ကုန်အသစ်')), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "ထုတ်ကုန်အမည်"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    placeholder: "ဥပမာ — Chocolate Cake",
+    value: name,
+    onChange: e => setName(e.target.value)
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "section-title",
+    style: {
+      margin: 0,
+      fontSize: 15
+    }
+  }, "ကုန်ကြမ်းများ"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      padding: '5px 12px',
+      fontSize: 13
+    },
+    onClick: addRow
+  }, "+ ထည့်ရန်")), rows.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: 'var(--textMuted)',
+      fontSize: 13,
+      textAlign: 'center',
+      padding: '12px 0'
+    }
+  }, "ကုန်ကြမ်း မရှိသေးပါ"), rows.map((row, i) => {
+    const ing = ingredients.find(x => x.id === row.ingredientId);
+    const compatible = ing ? getCompatibleUnits(ing.unit) : [];
+    const cost = calcIngCost(row, ingredients);
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      className: "ing-row-card"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 8,
+        marginBottom: 8,
+        alignItems: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("select", {
+      className: "select",
+      style: {
+        flex: 2
+      },
+      value: row.ingredientId,
+      onChange: e => {
+        const newIng = ingredients.find(x => x.id === e.target.value);
+        updateRow(i, 'ingredientId', e.target.value);
+        if (newIng) updateRow(i, 'usedUnit', newIng.unit);
+      }
+    }, ingredients.map(ing => /*#__PURE__*/React.createElement("option", {
+      key: ing.id,
+      value: ing.id
+    }, ing.name))), /*#__PURE__*/React.createElement("button", {
+      style: {
+        border: 'none',
+        background: 'none',
+        cursor: 'pointer',
+        padding: 4
+      },
+      onClick: () => removeRow(i)
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "x",
+      size: 16,
+      color: "var(--danger)"
+    }))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 8,
+        alignItems: 'center'
+      }
+    }, /*#__PURE__*/React.createElement("input", {
+      className: "input",
+      style: {
+        flex: 1
+      },
+      type: "number",
+      placeholder: "ပမာဏ",
+      value: row.quantity,
+      onChange: e => updateRow(i, 'quantity', parseFloat(e.target.value) || 0)
+    }), /*#__PURE__*/React.createElement("select", {
+      className: "select",
+      style: {
+        flex: 1
+      },
+      value: row.usedUnit || ing?.unit || '',
+      onChange: e => updateRow(i, 'usedUnit', e.target.value)
+    }, compatible.map(u => /*#__PURE__*/React.createElement("option", {
+      key: u,
+      value: u
+    }, u))), /*#__PURE__*/React.createElement("span", {
+      style: {
+        minWidth: 80,
+        textAlign: 'right',
+        fontSize: 13,
+        fontWeight: 600,
+        color: 'var(--brand)'
+      }
+    }, formatKs(cost))));
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      marginTop: 8,
+      fontWeight: 700,
+      fontSize: 14,
+      color: 'var(--brand)'
+    }
+  }, "Ingredient စုစုပေါင်း: ", formatKs(ingTotal))), [{
+    key: 'packaging',
+    label: 'Packaging',
+    state: packaging,
+    set: setPackaging
+  }, {
+    key: 'labor',
+    label: 'Labor / လုပ်ခ',
+    state: labor,
+    set: setLabor
+  }, {
+    key: 'overhead',
+    label: 'Overhead',
+    state: overhead,
+    set: setOverhead
+  }, {
+    key: 'transport',
+    label: 'Transport',
+    state: transport,
+    set: setTransport
+  }, {
+    key: 'wastage',
+    label: 'Wastage / အပျက်စီး',
+    state: wastage,
+    set: setWastage
+  }].map(({
+    key,
+    label,
+    state,
+    set
+  }) => /*#__PURE__*/React.createElement("div", {
+    key: key,
+    className: "card",
+    style: {
+      padding: '10px 14px'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      alignItems: 'center',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    checked: state.enabled,
+    onChange: e => set(prev => ({
+      ...prev,
+      enabled: e.target.checked
+    })),
+    style: {
+      width: 16,
+      height: 16,
+      accentColor: 'var(--brand)',
+      cursor: 'pointer'
+    }
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      flex: 1,
+      fontWeight: 600,
+      fontSize: 14,
+      color: 'var(--textMain)'
+    }
+  }, label), state.enabled && /*#__PURE__*/React.createElement("div", {
+    className: "toggle-group",
+    style: {
+      padding: 2
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: `toggle-btn ${!state.isPercent ? 'active' : ''}`,
+    style: {
+      padding: '3px 8px',
+      fontSize: 12
+    },
+    onClick: () => set(prev => ({
+      ...prev,
+      isPercent: false
+    }))
+  }, "Ks"), /*#__PURE__*/React.createElement("button", {
+    className: `toggle-btn ${state.isPercent ? 'active' : ''}`,
+    style: {
+      padding: '3px 8px',
+      fontSize: 12
+    },
+    onClick: () => set(prev => ({
+      ...prev,
+      isPercent: true
+    }))
+  }, "%"))), state.enabled && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      display: 'flex',
+      gap: 8,
+      alignItems: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    placeholder: state.isPercent ? "ရာခိုင်နှုန်း %" : "ပမာဏ (Ks)",
+    value: state.amount || '',
+    onChange: e => set(prev => ({
+      ...prev,
+      amount: parseFloat(e.target.value) || 0
+    }))
+  }), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 13,
+      color: 'var(--brand)',
+      fontWeight: 600,
+      minWidth: 70,
+      textAlign: 'right'
+    }
+  }, formatKs(resolveOptional(state, ingTotal)))))), /*#__PURE__*/React.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "ထုတ်ကုန်အရေအတွက် (ခု)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    type: "number",
+    placeholder: "ဥပမာ — 10",
+    value: productQty,
+    onChange: e => setProductQty(e.target.value)
+  }), unitPrice !== null && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--textMuted)'
+    }
+  }, "တစ်ခုချင်းတန်ဖိုး"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      color: 'var(--success)'
+    }
+  }, formatKs(unitPrice)))), /*#__PURE__*/React.createElement("div", {
+    className: "summary-box"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "summary-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      fontSize: 16
+    }
+  }, "စုစုပေါင်း ကုန်ကျ"), /*#__PURE__*/React.createElement("span", {
+    className: "summary-total",
+    style: {
+      fontSize: 20
+    }
+  }, formatKs(total))), unitPrice !== null && /*#__PURE__*/React.createElement("div", {
+    className: "summary-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 600
+    }
+  }, "တစ်ခုချင်းတန်ဖိုး"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontWeight: 700,
+      color: 'var(--success)'
+    }
+  }, formatKs(unitPrice)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      marginTop: 16
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn",
+    style: {
+      flex: 1,
+      background: 'var(--borderCol)',
+      color: 'var(--textMuted)',
+      justifyContent: 'center'
+    },
+    onClick: onCancel
+  }, "မသိမ်းဘဲ ပြန်ထွက်"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      flex: 2,
+      justifyContent: 'center'
+    },
+    onClick: handleSave
+  }, editProduct ? '✓ ပြင်ဆင်မည်' : '✓ သိမ်းဆည်းမည်')), /*#__PURE__*/React.createElement("div", {
+    className: "footer"
+  }, "Creator — Lwin Oo"));
 }
 
 // ─── Ingredients Tab ──────────────────────────────────────────────────────────
-function IngredientsTab({ ingredients, setIngredients }) {
+function IngredientsTab({
+  ingredients,
+  setIngredients
+}) {
   const [search, setSearch] = useState('');
   const [viewMode, setViewMode] = useState('card');
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState(null);
   const [historyIng, setHistoryIng] = useState(null);
-
   const [name, setName] = useState('');
   const [packageQty, setPackageQty] = useState('1');
   const [unit, setUnit] = useState('Kg');
   const [packagePrice, setPackagePrice] = useState('');
-
   const filtered = search.trim() ? ingredients.filter(i => i.name.toLowerCase().includes(search.toLowerCase())) : ingredients;
-
-  const openAdd = () => { setEditing(null); setName(''); setPackageQty('1'); setUnit('Kg'); setPackagePrice(''); setShowModal(true); };
-  const openEdit = (ing) => { setEditing(ing); setName(ing.name); setPackageQty(String(ing.packageQty)); setUnit(ing.unit); setPackagePrice(String(ing.packagePrice)); setShowModal(true); };
-
+  const openAdd = () => {
+    setEditing(null);
+    setName('');
+    setPackageQty('1');
+    setUnit('Kg');
+    setPackagePrice('');
+    setShowModal(true);
+  };
+  const openEdit = ing => {
+    setEditing(ing);
+    setName(ing.name);
+    setPackageQty(String(ing.packageQty));
+    setUnit(ing.unit);
+    setPackagePrice(String(ing.packagePrice));
+    setShowModal(true);
+  };
   const previewDerived = (() => {
-    const q = toNum(packageQty), p = toNum(packagePrice);
-    if (!isNaN(q) && q > 0 && !isNaN(p) && p > 0) return getDerivedPrices({ id: '', name: '', packageQty: q, unit, packagePrice: p });
+    const q = toNum(packageQty),
+      p = toNum(packagePrice);
+    if (!isNaN(q) && q > 0 && !isNaN(p) && p > 0) return getDerivedPrices({
+      id: '',
+      name: '',
+      packageQty: q,
+      unit,
+      packagePrice: p
+    });
     return [];
   })();
-
   const handleSave = () => {
     if (!name.trim()) return alert('ကုန်ကြမ်းအမည် ထည့်ပေးပါ');
-    const q = toNum(packageQty), p = toNum(packagePrice);
+    const q = toNum(packageQty),
+      p = toNum(packagePrice);
     if (isNaN(q) || q <= 0) return alert('ပမာဏ မှားနေသည်');
     if (isNaN(p) || p < 0) return alert('ဈေးနှုန်း မှားနေသည်');
     const ing = {
       id: editing ? editing.id : uid(),
-      name: name.trim(), packageQty: q, unit, packagePrice: p,
+      name: name.trim(),
+      packageQty: q,
+      unit,
+      packagePrice: p,
       createdAt: editing ? editing.createdAt : Date.now(),
-      priceHistory: editing ? [
-        ...(editing.priceHistory || []),
-        { packageQty: editing.packageQty, unit: editing.unit, packagePrice: editing.packagePrice, changedAt: Date.now() }
-      ] : [],
+      priceHistory: editing ? [...(editing.priceHistory || []), {
+        packageQty: editing.packageQty,
+        unit: editing.unit,
+        packagePrice: editing.packagePrice,
+        changedAt: Date.now()
+      }] : []
     };
     setIngredients(prev => editing ? prev.map(x => x.id === ing.id ? ing : x) : [...prev, ing]);
     setShowModal(false);
   };
-
-  const handleDelete = (id) => { if (confirm('ဒီ ကုန်ကြမ်းကို ဖျက်မည်လား?')) setIngredients(prev => prev.filter(i => i.id !== id)); };
-
-  return (
-    <div className="page-content">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
-        <h2 className="section-title" style={{ margin: 0 }}>ကုန်ကြမ်းများ</h2>
-        <span style={{ fontSize: 12, color: 'var(--textMuted)' }}>{ingredients.length} ခု</span>
-      </div>
-
-      {/* Search */}
-      <div className="search-row">
-        <Icon name="search" size={15} color="var(--textMuted)" />
-        <input className="search-input" placeholder="ကုန်ကြမ်းအမည် ရှာဖွေရန်..." value={search} onChange={e => setSearch(e.target.value)} />
-        {search && <button style={{ border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => setSearch('')}><Icon name="x" size={13} color="var(--textMuted)" /></button>}
-      </div>
-
-      {/* View Toggle */}
-      <div className="view-toggle">
-        {[['card','Card'],['table','Table'],['compact','Compact']].map(([m,l]) => (
-          <button key={m} className={`view-btn ${viewMode === m ? 'active' : ''}`} onClick={() => setViewMode(m)}>{l}</button>
-        ))}
-      </div>
-
-      {/* Content */}
-      {filtered.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-icon">{search ? '🔍' : '🌾'}</div>
-          <div className="empty-title">{search ? `"${search}" မတွေ့ပါ` : 'ကုန်ကြမ်း မရှိသေးပါ'}</div>
-          <div className="empty-desc">{search ? 'အမည် ပြောင်းပြီး ထပ်ရှာကြည့်ပါ' : '+ ခလုတ်နှိပ်ပြီး ကုန်ကြမ်းနဲ့ ဈေးနှုန်း ထည့်ပါ'}</div>
-        </div>
-      ) : viewMode === 'table' ? (
-        <div className="table-wrap">
-          <table>
-            <thead><tr><th>ကုန်ကြမ်း</th><th>ပမာဏ</th><th>ဈေးနှုန်း</th><th>နေ့ရက်</th><th></th></tr></thead>
-            <tbody>
-              {filtered.map(ing => (
-                <tr key={ing.id}>
-                  <td style={{ fontWeight: 600 }}>{ing.name}</td>
-                  <td>{ing.packageQty} {ing.unit}</td>
-                  <td style={{ fontWeight: 600, color: 'var(--brand)' }}>{formatKs(ing.packagePrice)}</td>
-                  <td style={{ fontSize: 12, color: 'var(--textMuted)' }}>{formatDate(ing.createdAt)}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: 6 }}>
-                      <button style={{ border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => openEdit(ing)}><Icon name="pencil" size={15} color="var(--brand)" /></button>
-                      <button style={{ border: 'none', background: 'none', cursor: 'pointer' }} onClick={() => handleDelete(ing.id)}><Icon name="trash" size={15} color="var(--danger)" /></button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : viewMode === 'compact' ? (
-        filtered.map(ing => (
-          <div key={ing.id} className="compact-row">
-            <div style={{ flex: 1 }}>
-              <div style={{ fontWeight: 600, fontSize: 14, color: 'var(--textMain)' }}>{ing.name}</div>
-              <div style={{ fontSize: 12, color: 'var(--textMuted)' }}>{ing.packageQty} {ing.unit} = {formatKs(ing.packagePrice)}{ing.createdAt ? ` · ${formatDate(ing.createdAt)}` : ''}</div>
-            </div>
-            <button style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 4 }} onClick={() => openEdit(ing)}><Icon name="pencil" size={16} color="var(--brand)" /></button>
-            <button style={{ border: 'none', background: 'none', cursor: 'pointer', padding: 4 }} onClick={() => handleDelete(ing.id)}><Icon name="trash" size={16} color="var(--danger)" /></button>
-          </div>
-        ))
-      ) : (
-        filtered.map(ing => {
-          const derived = getDerivedPrices(ing);
-          const hasHistory = (ing.priceHistory || []).length > 0;
-          return (
-            <div key={ing.id} className="card">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6, flexWrap: 'wrap' }}>
-                    <span style={{ fontWeight: 700, fontSize: 15, color: 'var(--textMain)' }}>{ing.name}</span>
-                    <span className="chip">{ing.packageQty} {ing.unit} = {formatKs(ing.packagePrice)}</span>
-                  </div>
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: 2, marginBottom: 6 }}>
-                    {derived.map((d, i) => <span key={i} className="chip" style={{ fontSize: 10 }}>{d}</span>)}
-                  </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
-                    {ing.createdAt && <span style={{ fontSize: 11, color: 'var(--textMuted)', fontStyle: 'italic' }}>ထည်သွင်းသောနေ့ — {formatDate(ing.createdAt)}</span>}
-                    {hasHistory && (
-                      <button style={{ border: 'none', background: 'var(--brandLight)', borderRadius: 6, padding: '2px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 4, fontSize: 11, color: 'var(--brand)', fontWeight: 600 }} onClick={() => setHistoryIng(ing)}>
-                        <Icon name="clock" size={11} color="var(--brand)" /> {ing.priceHistory.length} ကြိမ် ပြောင်းခဲ့သည်
-                      </button>
-                    )}
-                  </div>
-                </div>
-                <div style={{ display: 'flex', gap: 6, marginLeft: 8 }}>
-                  <button className="btn btn-ghost" style={{ padding: '6px 10px' }} onClick={() => openEdit(ing)}><Icon name="pencil" size={15} color="var(--brand)" /></button>
-                  <button className="btn btn-danger" style={{ padding: '6px 10px' }} onClick={() => handleDelete(ing.id)}><Icon name="trash" size={15} color="var(--danger)" /></button>
-                </div>
-              </div>
-            </div>
-          );
-        })
-      )}
-
-      <div className="footer">Creator — Lwin Oo</div>
-
-      <button className="fab" onClick={openAdd}><Icon name="plus" size={26} color="#fff" /></button>
-
-      {/* Add/Edit Modal */}
-      {showModal && (
-        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setShowModal(false)}>
-          <div className="modal-sheet">
-            <div className="modal-handle" />
-            <h3 style={{ fontWeight: 700, fontSize: 17, color: 'var(--textMain)', marginBottom: 16 }}>{editing ? 'ကုန်ကြမ်းပြင်ဆင်ရန်' : 'ကုန်ကြမ်းအသစ်ထည့်ရန်'}</h3>
-
-            <label className="label">ကုန်ကြမ်းအမည်</label>
-            <input className="input" style={{ marginBottom: 12 }} placeholder="ဂျုံ ၊ သကြား ၊ ဆီ" value={name} onChange={e => setName(e.target.value)} />
-
-            <label className="label">တအိတ်/တပုံး/တထုတ် ပမာဏ</label>
-            <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-              <input className="input" style={{ flex: 1 }} type="number" placeholder="ဥပမာ — 1" value={packageQty} onChange={e => setPackageQty(e.target.value)} />
-              <select className="select" style={{ flex: 1 }} value={unit} onChange={e => setUnit(e.target.value)}>
-                {UNITS.map(u => <option key={u} value={u}>{u}</option>)}
-              </select>
-            </div>
-
-            <label className="label">တအိတ်/တပုံး/တထုတ် ဈေးနှုန်း (Ks)</label>
-            <input className="input" style={{ marginBottom: 12 }} type="number" placeholder="ဥပမာ — 3500" value={packagePrice} onChange={e => setPackagePrice(e.target.value)} />
-
-            {previewDerived.length > 0 && (
-              <div style={{ background: 'var(--brandLight)', borderRadius: 10, padding: 10, marginBottom: 12 }}>
-                <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--brand)', marginBottom: 6 }}>ကြိုကြည့်ရှုရန် — ဈေးနှုန်းများ</div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4 }}>
-                  {previewDerived.map((d, i) => <span key={i} className="chip" style={{ fontSize: 11 }}>{d}</span>)}
-                </div>
-              </div>
-            )}
-
-            <div style={{ display: 'flex', gap: 10, marginTop: 8 }}>
-              <button className="btn" style={{ flex: 1, background: 'var(--borderCol)', color: 'var(--textMuted)', justifyContent: 'center' }} onClick={() => setShowModal(false)}>မသိမ်းဘဲ ပြန်ထွက်</button>
-              <button className="btn btn-primary" style={{ flex: 2, justifyContent: 'center' }} onClick={handleSave}>{editing ? '✓ ပြင်ဆင်မည်' : '✓ သိမ်းဆည်းမည်'}</button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Price History Modal */}
-      {historyIng && (
-        <div className="modal-overlay" onClick={e => e.target === e.currentTarget && setHistoryIng(null)}>
-          <div className="modal-sheet">
-            <div className="modal-handle" />
-            <h3 style={{ fontWeight: 700, fontSize: 17, color: 'var(--textMain)', marginBottom: 4 }}>{historyIng.name}</h3>
-            <div style={{ fontSize: 13, color: 'var(--textMuted)', marginBottom: 16 }}>ဈေးနှုန်းပြောင်းလဲမှု မှတ်တမ်း</div>
-            {(historyIng.priceHistory || []).slice().reverse().map((h, i) => (
-              <div key={i} className="price-history-row">
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14 }}>
-                  <span style={{ color: 'var(--textMain)', fontWeight: 600 }}>{h.packageQty} {h.unit} = {formatKs(h.packagePrice)}</span>
-                  <span style={{ color: 'var(--textMuted)', fontSize: 12 }}>{formatDate(h.changedAt)}</span>
-                </div>
-              </div>
-            ))}
-            <div style={{ marginTop: 12, padding: '10px 0', borderTop: '2px solid var(--brand)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14, fontWeight: 700 }}>
-                <span style={{ color: 'var(--brand)' }}>လက်ရှိဈေးနှုန်း</span>
-                <span style={{ color: 'var(--brand)' }}>{historyIng.packageQty} {historyIng.unit} = {formatKs(historyIng.packagePrice)}</span>
-              </div>
-            </div>
-            <button className="btn btn-ghost" style={{ width: '100%', justifyContent: 'center', marginTop: 12 }} onClick={() => setHistoryIng(null)}>ပိတ်မည်</button>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  const handleDelete = id => {
+    if (confirm('ဒီ ကုန်ကြမ်းကို ဖျက်မည်လား?')) setIngredients(prev => prev.filter(i => i.id !== id));
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page-content"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title",
+    style: {
+      margin: 0
+    }
+  }, "ကုန်ကြမ်းများ"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, ingredients.length, " ခု")), /*#__PURE__*/React.createElement("div", {
+    className: "search-row"
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "search",
+    size: 15,
+    color: "var(--textMuted)"
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "search-input",
+    placeholder: "ကုန်ကြမ်းအမည် ရှာဖွေရန်...",
+    value: search,
+    onChange: e => setSearch(e.target.value)
+  }), search && /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer'
+    },
+    onClick: () => setSearch('')
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "x",
+    size: 13,
+    color: "var(--textMuted)"
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "view-toggle"
+  }, [['card', 'Card'], ['table', 'Table'], ['compact', 'Compact']].map(([m, l]) => /*#__PURE__*/React.createElement("button", {
+    key: m,
+    className: `view-btn ${viewMode === m ? 'active' : ''}`,
+    onClick: () => setViewMode(m)
+  }, l))), filtered.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "empty-state"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "empty-icon"
+  }, search ? '🔍' : '🌾'), /*#__PURE__*/React.createElement("div", {
+    className: "empty-title"
+  }, search ? `"${search}" မတွေ့ပါ` : 'ကုန်ကြမ်း မရှိသေးပါ'), /*#__PURE__*/React.createElement("div", {
+    className: "empty-desc"
+  }, search ? 'အမည် ပြောင်းပြီး ထပ်ရှာကြည့်ပါ' : '+ ခလုတ်နှိပ်ပြီး ကုန်ကြမ်းနဲ့ ဈေးနှုန်း ထည့်ပါ')) : viewMode === 'table' ? /*#__PURE__*/React.createElement("div", {
+    className: "table-wrap"
+  }, /*#__PURE__*/React.createElement("table", null, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", null, "ကုန်ကြမ်း"), /*#__PURE__*/React.createElement("th", null, "ပမာဏ"), /*#__PURE__*/React.createElement("th", null, "ဈေးနှုန်း"), /*#__PURE__*/React.createElement("th", null, "နေ့ရက်"), /*#__PURE__*/React.createElement("th", null))), /*#__PURE__*/React.createElement("tbody", null, filtered.map(ing => /*#__PURE__*/React.createElement("tr", {
+    key: ing.id
+  }, /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontWeight: 600
+    }
+  }, ing.name), /*#__PURE__*/React.createElement("td", null, ing.packageQty, " ", ing.unit), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--brand)'
+    }
+  }, formatKs(ing.packagePrice)), /*#__PURE__*/React.createElement("td", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, formatDate(ing.createdAt)), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 6
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer'
+    },
+    onClick: () => openEdit(ing)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "pencil",
+    size: 15,
+    color: "var(--brand)"
+  })), /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer'
+    },
+    onClick: () => handleDelete(ing.id)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trash",
+    size: 15,
+    color: "var(--danger)"
+  }))))))))) : viewMode === 'compact' ? filtered.map(ing => /*#__PURE__*/React.createElement("div", {
+    key: ing.id,
+    className: "compact-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      fontSize: 14,
+      color: 'var(--textMain)'
+    }
+  }, ing.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, ing.packageQty, " ", ing.unit, " = ", formatKs(ing.packagePrice), ing.createdAt ? ` · ${formatDate(ing.createdAt)}` : '')), /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer',
+      padding: 4
+    },
+    onClick: () => openEdit(ing)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "pencil",
+    size: 16,
+    color: "var(--brand)"
+  })), /*#__PURE__*/React.createElement("button", {
+    style: {
+      border: 'none',
+      background: 'none',
+      cursor: 'pointer',
+      padding: 4
+    },
+    onClick: () => handleDelete(ing.id)
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trash",
+    size: 16,
+    color: "var(--danger)"
+  })))) : filtered.map(ing => {
+    const derived = getDerivedPrices(ing);
+    const hasHistory = (ing.priceHistory || []).length > 0;
+    return /*#__PURE__*/React.createElement("div", {
+      key: ing.id,
+      className: "card"
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        flex: 1
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        marginBottom: 6,
+        flexWrap: 'wrap'
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 700,
+        fontSize: 15,
+        color: 'var(--textMain)'
+      }
+    }, ing.name), /*#__PURE__*/React.createElement("span", {
+      className: "chip"
+    }, ing.packageQty, " ", ing.unit, " = ", formatKs(ing.packagePrice))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: 2,
+        marginBottom: 6
+      }
+    }, derived.map((d, i) => /*#__PURE__*/React.createElement("span", {
+      key: i,
+      className: "chip",
+      style: {
+        fontSize: 10
+      }
+    }, d))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        alignItems: 'center',
+        gap: 10,
+        flexWrap: 'wrap'
+      }
+    }, ing.createdAt && /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 11,
+        color: 'var(--textMuted)',
+        fontStyle: 'italic'
+      }
+    }, "ထည်သွင်းသောနေ့ — ", formatDate(ing.createdAt)), hasHistory && /*#__PURE__*/React.createElement("button", {
+      style: {
+        border: 'none',
+        background: 'var(--brandLight)',
+        borderRadius: 6,
+        padding: '2px 8px',
+        cursor: 'pointer',
+        display: 'flex',
+        alignItems: 'center',
+        gap: 4,
+        fontSize: 11,
+        color: 'var(--brand)',
+        fontWeight: 600
+      },
+      onClick: () => setHistoryIng(ing)
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "clock",
+      size: 11,
+      color: "var(--brand)"
+    }), " ", ing.priceHistory.length, " ကြိမ် ပြောင်းခဲ့သည်"))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: 'flex',
+        gap: 6,
+        marginLeft: 8
+      }
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-ghost",
+      style: {
+        padding: '6px 10px'
+      },
+      onClick: () => openEdit(ing)
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "pencil",
+      size: 15,
+      color: "var(--brand)"
+    })), /*#__PURE__*/React.createElement("button", {
+      className: "btn btn-danger",
+      style: {
+        padding: '6px 10px'
+      },
+      onClick: () => handleDelete(ing.id)
+    }, /*#__PURE__*/React.createElement(Icon, {
+      name: "trash",
+      size: 15,
+      color: "var(--danger)"
+    })))));
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "footer"
+  }, "Creator — Lwin Oo"), /*#__PURE__*/React.createElement("button", {
+    className: "fab",
+    onClick: openAdd
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "plus",
+    size: 26,
+    color: "#fff"
+  })), showModal && /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: e => e.target === e.currentTarget && setShowModal(false)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-sheet"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-handle"
+  }), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontWeight: 700,
+      fontSize: 17,
+      color: 'var(--textMain)',
+      marginBottom: 16
+    }
+  }, editing ? 'ကုန်ကြမ်းပြင်ဆင်ရန်' : 'ကုန်ကြမ်းအသစ်ထည့်ရန်'), /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "ကုန်ကြမ်းအမည်"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    style: {
+      marginBottom: 12
+    },
+    placeholder: "ဂျုံ ၊ သကြား ၊ ဆီ",
+    value: name,
+    onChange: e => setName(e.target.value)
+  }), /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "တအိတ်/တပုံး/တထုတ် ပမာဏ"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 8,
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    style: {
+      flex: 1
+    },
+    type: "number",
+    placeholder: "ဥပမာ — 1",
+    value: packageQty,
+    onChange: e => setPackageQty(e.target.value)
+  }), /*#__PURE__*/React.createElement("select", {
+    className: "select",
+    style: {
+      flex: 1
+    },
+    value: unit,
+    onChange: e => setUnit(e.target.value)
+  }, UNITS.map(u => /*#__PURE__*/React.createElement("option", {
+    key: u,
+    value: u
+  }, u)))), /*#__PURE__*/React.createElement("label", {
+    className: "label"
+  }, "တအိတ်/တပုံး/တထုတ် ဈေးနှုန်း (Ks)"), /*#__PURE__*/React.createElement("input", {
+    className: "input",
+    style: {
+      marginBottom: 12
+    },
+    type: "number",
+    placeholder: "ဥပမာ — 3500",
+    value: packagePrice,
+    onChange: e => setPackagePrice(e.target.value)
+  }), previewDerived.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: 'var(--brandLight)',
+      borderRadius: 10,
+      padding: 10,
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      fontWeight: 700,
+      color: 'var(--brand)',
+      marginBottom: 6
+    }
+  }, "ကြိုကြည့်ရှုရန် — ဈေးနှုန်းများ"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      gap: 4
+    }
+  }, previewDerived.map((d, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "chip",
+    style: {
+      fontSize: 11
+    }
+  }, d)))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10,
+      marginTop: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn",
+    style: {
+      flex: 1,
+      background: 'var(--borderCol)',
+      color: 'var(--textMuted)',
+      justifyContent: 'center'
+    },
+    onClick: () => setShowModal(false)
+  }, "မသိမ်းဘဲ ပြန်ထွက်"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-primary",
+    style: {
+      flex: 2,
+      justifyContent: 'center'
+    },
+    onClick: handleSave
+  }, editing ? '✓ ပြင်ဆင်မည်' : '✓ သိမ်းဆည်းမည်')))), historyIng && /*#__PURE__*/React.createElement("div", {
+    className: "modal-overlay",
+    onClick: e => e.target === e.currentTarget && setHistoryIng(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-sheet"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "modal-handle"
+  }), /*#__PURE__*/React.createElement("h3", {
+    style: {
+      fontWeight: 700,
+      fontSize: 17,
+      color: 'var(--textMain)',
+      marginBottom: 4
+    }
+  }, historyIng.name), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 13,
+      color: 'var(--textMuted)',
+      marginBottom: 16
+    }
+  }, "ဈေးနှုန်းပြောင်းလဲမှု မှတ်တမ်း"), (historyIng.priceHistory || []).slice().reverse().map((h, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    className: "price-history-row"
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--textMain)',
+      fontWeight: 600
+    }
+  }, h.packageQty, " ", h.unit, " = ", formatKs(h.packagePrice)), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--textMuted)',
+      fontSize: 12
+    }
+  }, formatDate(h.changedAt))))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 12,
+      padding: '10px 0',
+      borderTop: '2px solid var(--brand)'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      justifyContent: 'space-between',
+      fontSize: 14,
+      fontWeight: 700
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--brand)'
+    }
+  }, "လက်ရှိဈေးနှုန်း"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: 'var(--brand)'
+    }
+  }, historyIng.packageQty, " ", historyIng.unit, " = ", formatKs(historyIng.packagePrice)))), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      width: '100%',
+      justifyContent: 'center',
+      marginTop: 12
+    },
+    onClick: () => setHistoryIng(null)
+  }, "ပိတ်မည်"))));
 }
 
 // ─── Settings Tab ─────────────────────────────────────────────────────────────
-function SettingsTab({ ingredients, products, setIngredients, setProducts, profiles, setProfiles, activeProfileId, setActiveProfileId, theme, setTheme }) {
+function SettingsTab({
+  ingredients,
+  products,
+  setIngredients,
+  setProducts,
+  profiles,
+  setProfiles,
+  activeProfileId,
+  setActiveProfileId,
+  theme,
+  setTheme
+}) {
   const fileRef = useRef(null);
-
   const exportJSON = () => {
-    const data = { version: 2, exportedAt: Date.now(), profiles, activeProfileId, ingredients, products };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `prod-calc-backup-${formatDate(Date.now())}.json`; a.click();
+    const data = {
+      version: 2,
+      exportedAt: Date.now(),
+      profiles,
+      activeProfileId,
+      ingredients,
+      products
+    };
+    const blob = new Blob([JSON.stringify(data, null, 2)], {
+      type: 'application/json'
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `prod-calc-backup-${formatDate(Date.now())}.json`;
+    a.click();
   };
-
   const exportCSV = () => {
     const rows = [['Product Name', 'Total Cost (Ks)', 'Qty', 'Unit Price (Ks)', 'Date']];
     products.forEach(p => {
@@ -893,15 +1929,19 @@ function SettingsTab({ ingredients, products, setIngredients, setProducts, profi
       rows.push([p.name, total.toFixed(2), p.productQty || '', uPrice ? uPrice.toFixed(2) : '', formatDate(p.createdAt)]);
     });
     const csv = rows.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
-    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-    a.download = `prod-calc-products-${formatDate(Date.now())}.csv`; a.click();
+    const blob = new Blob(['\uFEFF' + csv], {
+      type: 'text/csv;charset=utf-8;'
+    });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `prod-calc-products-${formatDate(Date.now())}.csv`;
+    a.click();
   };
-
-  const importJSON = (e) => {
-    const file = e.target.files[0]; if (!file) return;
+  const importJSON = e => {
+    const file = e.target.files[0];
+    if (!file) return;
     const reader = new FileReader();
-    reader.onload = (ev) => {
+    reader.onload = ev => {
       try {
         const data = JSON.parse(ev.target.result);
         if (data.ingredients) setIngredients(data.ingredients);
@@ -909,79 +1949,211 @@ function SettingsTab({ ingredients, products, setIngredients, setProducts, profi
         if (data.profiles) setProfiles(data.profiles);
         if (data.activeProfileId) setActiveProfileId(data.activeProfileId);
         alert('Restore အောင်မြင်ပါသည်!');
-      } catch { alert('ဖိုင် မမှန်ကန်ပါ'); }
+      } catch {
+        alert('ဖိုင် မမှန်ကန်ပါ');
+      }
     };
     reader.readAsText(file);
     e.target.value = '';
   };
-
   const clearAll = () => {
     if (confirm('ဒေတာ အားလုံး ဖျက်မည်လား? ဤလုပ်ဆောင်ချက်ကို ပြန်မလုပ်နိုင်ပါ!')) {
-      setIngredients([]); setProducts([]);
+      setIngredients([]);
+      setProducts([]);
     }
   };
-
-  return (
-    <div className="page-content">
-      <h2 className="section-title">ဆက်တင်များ</h2>
-
-
-      {/* Backup */}
-      <div className="card" style={{ marginBottom: 12 }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--textMain)', marginBottom: 12 }}>💾 Backup & Restore</div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          <button className="btn btn-ghost" style={{ justifyContent: 'center' }} onClick={exportJSON}>
-            <Icon name="file-up" size={16} color="var(--brand)" /> JSON Backup ထုတ်ရန်
-          </button>
-          <button className="btn btn-ghost" style={{ justifyContent: 'center' }} onClick={exportCSV}>
-            <Icon name="table-2" size={16} color="var(--brand)" /> CSV Export (Products)
-          </button>
-          <button className="btn btn-ghost" style={{ justifyContent: 'center' }} onClick={() => fileRef.current?.click()}>
-            <Icon name="file-down" size={16} color="var(--brand)" /> JSON Restore လုပ်ရန်
-          </button>
-          <input ref={fileRef} type="file" accept=".json" style={{ display: 'none' }} onChange={importJSON} />
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="card" style={{ marginBottom: 12 }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--textMain)', marginBottom: 10 }}>📊 အချက်အလက်</div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <div style={{ flex: 1, background: 'var(--brandLight)', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
-            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--brand)' }}>{ingredients.length}</div>
-            <div style={{ fontSize: 12, color: 'var(--textMuted)' }}>ကုန်ကြမ်း</div>
-          </div>
-          <div style={{ flex: 1, background: 'var(--brandLight)', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
-            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--brand)' }}>{products.length}</div>
-            <div style={{ fontSize: 12, color: 'var(--textMuted)' }}>ထုတ်ကုန်</div>
-          </div>
-          <div style={{ flex: 1, background: 'var(--brandLight)', borderRadius: 10, padding: '12px', textAlign: 'center' }}>
-            <div style={{ fontSize: 24, fontWeight: 700, color: 'var(--brand)' }}>{profiles.length}</div>
-            <div style={{ fontSize: 12, color: 'var(--textMuted)' }}>Profile</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Danger */}
-      <div className="card" style={{ borderColor: '#FCA5A5' }}>
-        <div style={{ fontWeight: 700, fontSize: 15, color: 'var(--danger)', marginBottom: 8 }}>⚠️ အန္တရာယ်ရှိသော လုပ်ဆောင်ချက်</div>
-        <button className="btn btn-danger" style={{ width: '100%', justifyContent: 'center' }} onClick={clearAll}>
-          <Icon name="trash" size={16} color="var(--danger)" /> ဒေတာ အားလုံး ဖျက်မည်
-        </button>
-      </div>
-
-      <div className="footer" style={{ marginTop: 24 }}>
-        <div style={{ fontWeight: 600, color: 'var(--brand)', fontSize: 14 }}>Production Calculate</div>
-        <div>Creator — Lwin Oo</div>
-        <div style={{ marginTop: 4, fontSize: 11 }}>v2.0 · Offline PWA</div>
-      </div>
-    </div>
-  );
+  return /*#__PURE__*/React.createElement("div", {
+    className: "page-content"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "section-title"
+  }, "ဆက်တင်များ"), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 15,
+      color: 'var(--textMain)',
+      marginBottom: 12
+    }
+  }, "💾 Backup & Restore"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    },
+    onClick: exportJSON
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "file-up",
+    size: 16,
+    color: "var(--brand)"
+  }), " JSON Backup ထုတ်ရန်"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    },
+    onClick: exportCSV
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "table-2",
+    size: 16,
+    color: "var(--brand)"
+  }), " CSV Export (Products)"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-ghost",
+    style: {
+      justifyContent: 'center'
+    },
+    onClick: () => fileRef.current?.click()
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "file-down",
+    size: 16,
+    color: "var(--brand)"
+  }), " JSON Restore လုပ်ရန်"), /*#__PURE__*/React.createElement("input", {
+    ref: fileRef,
+    type: "file",
+    accept: ".json",
+    style: {
+      display: 'none'
+    },
+    onChange: importJSON
+  }))), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 15,
+      color: 'var(--textMain)',
+      marginBottom: 10
+    }
+  }, "📊 အချက်အလက်"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: 'flex',
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      background: 'var(--brandLight)',
+      borderRadius: 10,
+      padding: '12px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 24,
+      fontWeight: 700,
+      color: 'var(--brand)'
+    }
+  }, ingredients.length), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, "ကုန်ကြမ်း")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      background: 'var(--brandLight)',
+      borderRadius: 10,
+      padding: '12px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 24,
+      fontWeight: 700,
+      color: 'var(--brand)'
+    }
+  }, products.length), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, "ထုတ်ကုန်")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1,
+      background: 'var(--brandLight)',
+      borderRadius: 10,
+      padding: '12px',
+      textAlign: 'center'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 24,
+      fontWeight: 700,
+      color: 'var(--brand)'
+    }
+  }, profiles.length), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 12,
+      color: 'var(--textMuted)'
+    }
+  }, "Profile")))), /*#__PURE__*/React.createElement("div", {
+    className: "card",
+    style: {
+      borderColor: '#FCA5A5'
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      fontSize: 15,
+      color: 'var(--danger)',
+      marginBottom: 8
+    }
+  }, "⚠️ အန္တရာယ်ရှိသော လုပ်ဆောင်ချက်"), /*#__PURE__*/React.createElement("button", {
+    className: "btn btn-danger",
+    style: {
+      width: '100%',
+      justifyContent: 'center'
+    },
+    onClick: clearAll
+  }, /*#__PURE__*/React.createElement(Icon, {
+    name: "trash",
+    size: 16,
+    color: "var(--danger)"
+  }), " ဒေတာ အားလုံး ဖျက်မည်")), /*#__PURE__*/React.createElement("div", {
+    className: "footer",
+    style: {
+      marginTop: 24
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 600,
+      color: 'var(--brand)',
+      fontSize: 14
+    }
+  }, "Production Calculate"), /*#__PURE__*/React.createElement("div", null, "Creator — Lwin Oo"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 4,
+      fontSize: 11
+    }
+  }, "v2.0 · Offline PWA")));
 }
 
 // ─── Mount ────────────────────────────────────────────────────────────────────
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+document.addEventListener('DOMContentLoaded', function() {
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(React.createElement(App, null));
+  }
+});
+// Also try immediately in case DOM is already ready
+if (document.readyState !== 'loading') {
+  const rootEl = document.getElementById('root');
+  if (rootEl && rootEl.children.length === 0) {
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(React.createElement(App, null));
+  }
+}
 </script>
 
 <!-- PWA Inline Service Worker -->
@@ -1010,5 +2182,14 @@ self.addEventListener('fetch', e => {
 </head>
 <body>
 <div id="root"></div>
+
+<script>
+// Re-render after DOM is ready (in case root wasn't available)
+if (document.getElementById('root') && document.getElementById('root').children.length === 0) {
+  const rootEl = document.getElementById('root');
+  const r = ReactDOM.createRoot(rootEl);
+  r.render(React.createElement(App, null));
+}
+</script>
 </body>
 </html>
