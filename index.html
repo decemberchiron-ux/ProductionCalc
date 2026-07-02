@@ -2261,8 +2261,17 @@ function SettingsTab({
 }
 
 // ─── Mount ────────────────────────────────────────────────────────────────────
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(/*#__PURE__*/React.createElement(App, null));
+function mountApp() {
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    ReactDOM.createRoot(rootEl).render(/*#__PURE__*/React.createElement(App, null));
+  }
+}
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', mountApp);
+} else {
+  mountApp();
+}
 </script>
 
 <!-- PWA Inline Service Worker -->
