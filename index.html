@@ -540,12 +540,13 @@ const THEMES = [{
   name: '⬜ Minimal Slate'
 }];
 function convertUnit(qty, from, to) {
+  var _CROSS$from;
   if (from === to) return qty;
   const f = UNIT_MAP[from],
     t = UNIT_MAP[to];
   if (!f || !t) return null;
   if (f.base === t.base) return qty * f.factor / t.factor;
-  const cf = CROSS[from]?.[to];
+  const cf = (_CROSS$from = CROSS[from]) === null || _CROSS$from === void 0 ? void 0 : _CROSS$from[to];
   if (cf !== undefined) return qty * cf;
   return null;
 }
@@ -741,7 +742,7 @@ function App() {
       fontSize: 12,
       color: 'var(--textMuted)'
     }
-  }, activeProfile?.name)), /*#__PURE__*/React.createElement("div", {
+  }, activeProfile === null || activeProfile === void 0 ? void 0 : activeProfile.name)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 8,
@@ -827,7 +828,7 @@ function ProfileSwitcher({
       textOverflow: 'ellipsis',
       whiteSpace: 'nowrap'
     }
-  }, active?.name), /*#__PURE__*/React.createElement(Icon, {
+  }, active === null || active === void 0 ? void 0 : active.name), /*#__PURE__*/React.createElement(Icon, {
     name: "chevron-down",
     size: 12,
     color: "var(--brand)"
@@ -1271,11 +1272,11 @@ function ProductDetail({
       style: {
         color: 'var(--textMain)'
       }
-    }, ing?.name || 'Unknown', " ", /*#__PURE__*/React.createElement("span", {
+    }, (ing === null || ing === void 0 ? void 0 : ing.name) || 'Unknown', " ", /*#__PURE__*/React.createElement("span", {
       style: {
         color: 'var(--textMuted)'
       }
-    }, "(", row.quantity, " ", row.usedUnit || ing?.unit, ")")), /*#__PURE__*/React.createElement("span", {
+    }, "(", row.quantity, " ", row.usedUnit || (ing === null || ing === void 0 ? void 0 : ing.unit), ")")), /*#__PURE__*/React.createElement("span", {
       style: {
         fontWeight: 600,
         color: 'var(--brand)'
@@ -1376,14 +1377,14 @@ function ProductCalculator({
   onSave,
   onCancel
 }) {
-  const [name, setName] = useState(editProduct?.name || '');
-  const [rows, setRows] = useState(editProduct?.ingredientRows || []);
-  const [packaging, setPackaging] = useState(editProduct?.packaging || defCost());
-  const [labor, setLabor] = useState(editProduct?.labor || defCost());
-  const [overhead, setOverhead] = useState(editProduct?.overhead || defCost());
-  const [transport, setTransport] = useState(editProduct?.transport || defCost());
-  const [wastage, setWastage] = useState(editProduct?.wastage || defCost());
-  const [productQty, setProductQty] = useState(editProduct?.productQty ? String(editProduct.productQty) : '');
+  const [name, setName] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.name) || '');
+  const [rows, setRows] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.ingredientRows) || []);
+  const [packaging, setPackaging] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.packaging) || defCost());
+  const [labor, setLabor] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.labor) || defCost());
+  const [overhead, setOverhead] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.overhead) || defCost());
+  const [transport, setTransport] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.transport) || defCost());
+  const [wastage, setWastage] = useState((editProduct === null || editProduct === void 0 ? void 0 : editProduct.wastage) || defCost());
+  const [productQty, setProductQty] = useState(editProduct !== null && editProduct !== void 0 && editProduct.productQty ? String(editProduct.productQty) : '');
   const ingTotal = rows.reduce((s, r) => s + calcIngCost(r, ingredients), 0);
   const total = ingTotal + resolveOptional(packaging, ingTotal) + resolveOptional(labor, ingTotal) + resolveOptional(overhead, ingTotal) + resolveOptional(transport, ingTotal) + resolveOptional(wastage, ingTotal);
   const qty = toNum(productQty);
@@ -1405,7 +1406,7 @@ function ProductCalculator({
     if (!name.trim()) return alert('ထုတ်ကုန်အမည် ထည့်ပေးပါ');
     const qtyNum = toNum(productQty);
     onSave({
-      id: editProduct?.id || uid(),
+      id: (editProduct === null || editProduct === void 0 ? void 0 : editProduct.id) || uid(),
       name: name.trim(),
       ingredientRows: rows,
       packaging,
@@ -1414,7 +1415,7 @@ function ProductCalculator({
       transport,
       wastage,
       productQty: !isNaN(qtyNum) && qtyNum > 0 ? qtyNum : 0,
-      createdAt: editProduct?.createdAt || Date.now()
+      createdAt: (editProduct === null || editProduct === void 0 ? void 0 : editProduct.createdAt) || Date.now()
     });
   };
   return /*#__PURE__*/React.createElement("div", {
@@ -1538,7 +1539,7 @@ function ProductCalculator({
       style: {
         flex: 1
       },
-      value: row.usedUnit || ing?.unit || '',
+      value: row.usedUnit || (ing === null || ing === void 0 ? void 0 : ing.unit) || '',
       onChange: e => updateRow(i, 'usedUnit', e.target.value)
     }, compatible.map(u => /*#__PURE__*/React.createElement("option", {
       key: u,
@@ -2411,7 +2412,10 @@ function SettingsTab({
     style: {
       justifyContent: 'center'
     },
-    onClick: () => fileRef.current?.click()
+    onClick: () => {
+      var _fileRef$current;
+      return (_fileRef$current = fileRef.current) === null || _fileRef$current === void 0 ? void 0 : _fileRef$current.click();
+    }
   }, /*#__PURE__*/React.createElement(Icon, {
     name: "file-down",
     size: 16,
