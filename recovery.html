@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="my">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#D4822A">
+  <title>Production Calculate — Data Recovery</title>
+  <style>
+    :root { --brand:#D4822A; --ink:#3D2B1F; --muted:#806958; --line:#E8D5C0; --bg:#FDF6EC; --card:#fff; --soft:#FDE8C8; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:var(--bg); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width:680px; margin:0 auto; padding:22px 16px 44px; }
+    h1 { font-size:23px; margin:0 0 5px; }
+    h2 { font-size:17px; margin:24px 0 10px; }
+    p { line-height:1.5; margin:6px 0; }
+    .sub { color:var(--muted); font-size:14px; }
+    .card { margin-top:16px; padding:16px; border:1px solid var(--line); border-radius:15px; background:var(--card); }
+    .notice { background:var(--soft); color:var(--ink); }
+    .stats { display:flex; gap:10px; margin-top:14px; }
+    .stat { flex:1; padding:12px 8px; border-radius:12px; text-align:center; background:var(--soft); }
+    .num { color:var(--brand); font-size:25px; font-weight:700; }
+    .label { margin-top:2px; color:var(--muted); font-size:12px; }
+    button, a.button { width:100%; border:0; border-radius:11px; padding:13px; display:block; background:var(--brand); color:#fff; font:600 15px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; text-align:center; text-decoration:none; cursor:pointer; }
+    button.secondary { margin-top:9px; color:var(--brand); background:var(--soft); }
+    .item { padding:12px 0; border-bottom:1px solid var(--line); }
+    .item:last-child { border-bottom:0; }
+    .item b { display:block; font-size:15px; }
+    .item span { color:var(--muted); font-size:13px; }
+    .empty { color:var(--muted); font-size:14px; }
+    #error { display:none; color:#A52525; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Production Calculate</h1>
+    <p class="sub">Data Recovery — အရင်မှတ်ထားသောဒေတာကို မဖျက်ဘဲ ပြသပေးနေပါသည်</p>
+    <div id="status" class="card notice">Safari ထဲရှိ ဒေတာကို စစ်ဆေးနေပါသည်…</div>
+    <div id="content" style="display:none">
+      <div class="stats">
+        <div class="stat"><div id="ingredientCount" class="num">0</div><div class="label">ကုန်ကြမ်း</div></div>
+        <div class="stat"><div id="productCount" class="num">0</div><div class="label">ထုတ်ကုန်</div></div>
+      </div>
+      <div class="card">
+        <p><b>ဒေတာကို အရင်ကာကွယ်ပါ</b></p>
+        <p class="sub">အောက်ခလုတ်ဖြင့် အခုရှိသောကုန်ကြမ်းနှင့်ထုတ်ကုန်အားလုံးကို JSON backup အဖြစ် download လုပ်ထားနိုင်ပါသည်။ ဤလုပ်ဆောင်ချက်က app ထဲကဒေတာကို မပြောင်းလဲပါ။</p>
+        <button id="download">JSON Backup Download</button>
+        <a class="button secondary" href="./?recovery-open=20260822">Main App ကို ပြန်ဖွင့်ကြည့်ရန်</a>
+      </div>
+      <section class="card"><h2>ကုန်ကြမ်း</h2><div id="ingredients"></div></section>
+      <section class="card"><h2>ထုတ်ကုန်</h2><div id="products"></div></section>
+    </div>
+    <div id="error" class="card"></div>
+  </main>
+  <script>
+  (function () {
+    var KEY = 'prod_calc_v2';
+    var status = document.getElementById('status');
+    var content = document.getElementById('content');
+    var error = document.getElementById('error');
+    function text(value) { return String(value == null ? '' : value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function date(value) { if (!value) return ''; var d = new Date(value); return ('0' + d.getDate()).slice(-2) + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + d.getFullYear(); }
+    function list(id, rows, type) {
+      var el = document.getElementById(id);
+      if (!rows.length) { el.innerHTML = '<p class="empty">' + (type === 'ingredient' ? 'ကုန်ကြမ်း မတွေ့ပါ' : 'ထုတ်ကုန် မတွေ့ပါ') + '</p>'; return; }
+      var html = '';
+      for (var i = 0; i < rows.length; i++) {
+        var row = rows[i] || {};
+        if (type === 'ingredient') {
+          html += '<div class="item"><b>' + text(row.name) + '</b><span>' + text(row.packageQty) + ' ' + text(row.unit) + ' = ' + text(row.packagePrice) + ' Ks</span></div>';
+        } else {
+          html += '<div class="item"><b>' + text(row.name) + '</b><span>' + text(date(row.createdAt)) + '</span></div>';
+        }
+      }
+      el.innerHTML = html;
+    }
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (!raw) {
+        status.innerHTML = '<b>ဒေတာ မတွေ့သေးပါ</b><p class="sub">ဤ Safari profile ထဲတွင် Production Calculate data မရှိပါ။ အရင်က app ဖွင့်ခဲ့သော Safari/Home Screen နှင့်တူသော iPhone profile ကိုသာ အသုံးပြုထားကြောင်း စစ်ပါ။</p>';
+        return;
+      }
+      var data = JSON.parse(raw);
+      var ingredients = Array.isArray(data.ingredients) ? data.ingredients : [];
+      var products = Array.isArray(data.products) ? data.products : [];
+      status.innerHTML = '<b>အရင်ဒေတာတွေ့ရှိပါသည်</b><p class="sub">အောက်တွင် စာရင်းကို ပြသထားပြီး backup ကိုလည်း download လုပ်နိုင်ပါသည်။</p>';
+      document.getElementById('ingredientCount').textContent = ingredients.length;
+      document.getElementById('productCount').textContent = products.length;
+      list('ingredients', ingredients, 'ingredient');
+      list('products', products, 'product');
+      content.style.display = 'block';
+      document.getElementById('download').onclick = function () {
+        var blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+        var url = URL.createObjectURL(blob);
+        var link = document.createElement('a');
+        link.href = url; link.download = 'production-calculate-backup.json'; link.click();
+        setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+      };
+    } catch (e) {
+      status.style.display = 'none';
+      error.style.display = 'block';
+      error.innerHTML = '<b>ဒေတာဖတ်မရပါ</b><p>' + text(e && e.message ? e.message : e) + '</p><p class="sub">Safari data ကို မရှင်းပါနှင့်။ ဤစာမျက်နှာ၏ screenshot ကိုပို့ပေးပါ။</p>';
+    }
+  }());
+  </script>
+</body>
+</html>
